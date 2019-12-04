@@ -21,6 +21,11 @@ eye_cascade = cv2.CascadeClassifier(eye_cascade_path)
 
 driver_sleeping = False
 
+# Speed
+import random
+speed = random.randint(0,200)
+
+
 while(True):
 	ret, frame = cap.read();
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -51,9 +56,14 @@ while(True):
 			# Time Stamp
 			time_stamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")		
 			cv2.putText(gray_face, "UTC Time: " + str(time_stamp), (int(0.05*gray_face.shape[1]),int(0.15*gray_face.shape[0])), cv2.FONT_HERSHEY_SIMPLEX, 0.2, (255,0,0), 1, cv2.LINE_AA)		
+			
+			# Speed and Location
+			cv2.putText(gray_face, "Speed " + str(speed) + " mph", (int(0.05*gray_face.shape[1]),int(0.85*gray_face.shape[0])), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,0,0), 1, cv2.LINE_AA)		
+
+
 			driver_sleeping = True
 			cv2.imwrite('sleepy_driver.png',gray_face)
-
+			
 			# Send to IoT Broker
 			msg = cv2.imencode('.jpg',gray_face)[1]
 			msg_out = base64.b64encode(msg)			
